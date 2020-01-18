@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script {
                     docker.build("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}")
-                    docker.withRegistry('https://hub.docker.com', 'docker_credential') {
+                    docker.withRegistry('https://hub.docker.com/repository/docker', 'docker_credential') {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").push()
                     }
                 }
@@ -60,7 +60,7 @@ pipeline {
             agent { label 'master'}
             steps {
                 script {
-                    docker.withRegistry('https://hub.docker.com', 'docker_credential') {
+                    docker.withRegistry('https://hub.docker.com/repository/docker', 'docker_credential') {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").pull()
                     }
                 }
