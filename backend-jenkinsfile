@@ -64,7 +64,7 @@ pipeline {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").pull()
                     }
                 }
-                sh 'docker run -d --name easyclaim-backend -p 9001:80 easyclaim-backend-${env.BUILD_ID}'
+                sh "docker run -d --name easyclaim-backend -p 9001:80 easyclaim-backend-${env.BUILD_ID}"
             }
         }
     }
