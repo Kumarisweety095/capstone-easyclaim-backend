@@ -54,6 +54,7 @@ pipeline {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").push()
                     }
                 }
+                sh "docker image prune -a -f"
             }
         }
         stage('Docker Pull & Deploy') {
@@ -64,7 +65,10 @@ pipeline {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").pull()
                     }
                 }
-                sh "docker run -d --name easyclaim-backend -p 9001:80 easyclaim-backend-${env.BUILD_ID}"
+                sh "docker stop easyclaim-backend || true"
+                sh "docker rm easyclaim-backend || true"
+                sh "docker run -d --name easyclaim-backend -p 9001:80 vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}"
+                sh "docker image prune -a -f"
             }
         }
     }
