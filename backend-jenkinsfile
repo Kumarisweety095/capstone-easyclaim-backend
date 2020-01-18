@@ -29,6 +29,13 @@ pipeline {
                 )
             }
         }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "artifactory"
+                )
+            }
+        }
         stage('SonarQube analysis') {
             environment {
                 scannerHome = tool 'sonarscanner'
