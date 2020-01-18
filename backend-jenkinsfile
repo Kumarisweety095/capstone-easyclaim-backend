@@ -47,7 +47,6 @@ pipeline {
             }
         }
         stage('Docker Build and Push') {
-            agent { label 'master'}
             steps {
                 script {
                     docker.build("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}")
@@ -55,6 +54,17 @@ pipeline {
                         docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").push()
                     }
                 }
+            }
+        }
+        stage('Docker Pull & Deploy') {
+            agent { label 'master'}
+            steps {
+                script {
+                    docker.withRegistry('https://hub.docker.com', 'docker_credential') {
+                        docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").pull()
+                    }
+                }
+                sh 'docker run -d --name easyclaim-backend -p 9001:80 easyclaim-backend-${env.BUILD_ID}'
             }
         }
     }
