@@ -11,9 +11,32 @@ pipeline {
                     credential: "git_credential")
             }
         }
-        stage('Maven Build') {
+        stage ('Artifactory configuration') {
             steps {
-                sh 'mvn clean package'
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "artifactory",
+                    releaseRepo: "libs-release-local",
+                    snapshotRepo: "libs-snapshot-local"
+                )
+
+                rtMavenResolver (
+                    id: "MAVEN_RESOLVER",
+                    serverId: "artifactory",
+                    releaseRepo: "libs-release",
+                    snapshotRepo: "libs-snapshot"
+                )
+            }
+        }
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: maven,
+                    pom: 'pom.xml',
+                    goals: 'clean package',
+                    deployerId: "MAVEN_DEPLOYER",
+                    resolverId: "MAVEN_RESOLVER"
+                )
             }
         }
         stage('SonarQube analysis') {
