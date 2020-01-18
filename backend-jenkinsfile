@@ -1,16 +1,6 @@
-@Library('pipeline-library@master') _
- 
 pipeline {
     agent any
     stages {
-        stage('Git Checkout') {
-            steps {
-                gitCheckout(
-                    branch: "master",
-                    url: "https://github.com/vigneshsweekaran/capstone-easyclaim-backend.git",
-                    credential: "git_credential")
-            }
-        }
         stage ('Artifactory configuration') {
             steps {
                 rtMavenDeployer (
@@ -31,7 +21,6 @@ pipeline {
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    tool: maven,
                     pom: 'pom.xml',
                     goals: 'clean package',
                     deployerId: "MAVEN_DEPLOYER",
