@@ -5,6 +5,7 @@ pipeline {
         CLUSTER_NAME = 'capstone-cluster'
         LOCATION = 'us-central1-a'
         CREDENTIALS_ID = 'gke-capstone'
+        NAMESPACE = 'capstone'
     }
     stages {
         stage ('Artifactory configuration') {
@@ -67,7 +68,7 @@ pipeline {
         stage('Deploy to GKE') {
             steps{
                 sh "sed -i 's/easyclaim-backend:latest/easyclaim-backend:${env.BUILD_ID}/g' k8s-deployment.yml"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'k8s-deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'k8s-deployment.yml', credentialsId: env.CREDENTIALS_ID, namespace: env.NAMESPACE, verifyDeployments: true])
             }
         }
     }
