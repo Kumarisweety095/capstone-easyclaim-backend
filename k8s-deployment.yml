@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: easyclaim-backend
+  namespace: capstone
   labels:
     name: easyclaim-backend
 spec:
@@ -17,6 +18,8 @@ spec:
      spec:
        containers:
          - name:  easyclaim-backend
-           image: vigneshsweekaran/capstone:easyclaim-backend-16
+           image: vigneshsweekaran/capstone:easyclaim-backend-19
            ports:
              - containerPort: 80
+       imagePullSecrets:
+           - name: registry-credential
