@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment {
+        PROJECT_ID = 'melodic-nature-248204'
+        CLUSTER_NAME = 'capstone-cluster'
+        LOCATION = 'us-central1-a'
+        CREDENTIALS_ID = 'gke-capstone'
+    }
     stages {
         stage ('Artifactory configuration') {
             steps {
@@ -49,26 +55,19 @@ pipeline {
         stage('Docker Build and Push') {
             steps {
                 script {
-                    docker.build("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}")
-                    docker.withRegistry('', 'docker_credential') {
-                        docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").push()
+                    myapp = docker.build("vigneshsweekaran/easyclaim-backend:${env.BUILD_ID}")
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_credential') {
+                        myapp.push("latest")
+                        myapp.push("${env.BUILD_ID}")
                     }
                 }
                 sh "docker image prune -a -f"
             }
         }
-        stage('Docker Pull & Deploy') {
-            agent { label 'master'}
-            steps {
-                script {
-                    docker.withRegistry('', 'docker_credential') {
-                        docker.image("vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}").pull()
-                    }
-                }
-                sh "docker stop easyclaim-backend || true"
-                sh "docker rm easyclaim-backend || true"
-                sh "docker run -d --name easyclaim-backend -p 9002:80 vigneshsweekaran/capstone:easyclaim-backend-${env.BUILD_ID}"
-                sh "docker image prune -a -f"
+        stage('Deploy to GKE') {
+            steps{
+                sh "sed -i 's/easyclaim-backend:latest/easyclaim-backend:${env.BUILD_ID}/g' k8s-deployment.yml"
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'k8s-deployment.yml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
     }
