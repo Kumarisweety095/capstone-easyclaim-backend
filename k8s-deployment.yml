@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easyclaim-backend
+  labels:
+    name: easyclaim-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: easyclaim-backend-pod
+  template:
+     metadata:
+       name: easyclaim-backend-pod
+       labels:
+         name: easyclaim-backend-pod
+     spec:
+       containers:
+         - name:  easyclaim-backend
+           image: vigneshsweekaran/capstone:easyclaim-backend-16
+           ports:
+             - containerPort: 80
