@@ -10,16 +10,33 @@ spec:
   selector:
     matchLabels:
       name: easyclaim-backend-pod
+  strategy:
+    type: Recreate
   template:
-     metadata:
-       name: easyclaim-backend-pod
-       labels:
-         name: easyclaim-backend-pod
-     spec:
-       containers:
-         - name:  easyclaim-backend
-           image: vigneshsweekaran/capstone:easyclaim-backend-19
-           ports:
-             - containerPort: 80
-       imagePullSecrets:
-           - name: registry-credential
+    metadata:
+      name: easyclaim-backend-pod
+      labels:
+        name: easyclaim-backend-pod
+    spec:
+      containers:
+        - name:  easyclaim-backend
+          image: vigneshsweekaran/easyclaim-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: easyclaim-backend-service
+  namespace: capstone
+  labels:
+    name: easyclaim-backend-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+  selector:
+    name: easyclaim-backend-pod
+  type: LoadBalancer
