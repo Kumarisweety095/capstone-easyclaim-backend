@@ -1,7 +1,5 @@
 package com.devglan.service.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,19 +33,8 @@ public class ClaimServiceImpl implements ClaimService {
 	@Override
 	public List<Claim> findAll() {
 		List<Claim> list = new ArrayList<>();
-		List<Claim> resultList = new ArrayList<>();
 		claimDao.findAll().iterator().forEachRemaining(list::add);
-		for (Claim claim : list) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-			try {
-				claim.setBillDate(sdf.parse(claim.getBillDate().toString()));
-				resultList.add(claim);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-			}
-		}
-		return resultList;
+		return list;
 	}
 
 	@Override
