@@ -18,8 +18,17 @@ public class Claim {
     private Integer billNo;
     @Column
     private Double claimAmount;
+    private String billDateString;
 
-    public Integer getId() {
+    public String getBillDateString() {
+		return billDateString;
+	}
+
+	public void setBillDateString(String billDateString) {
+		this.billDateString = billDateString;
+	}
+
+	public Integer getId() {
         return id;
     }
 

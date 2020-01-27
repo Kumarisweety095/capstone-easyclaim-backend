@@ -1,5 +1,6 @@
 package com.devglan.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,14 @@ public class ClaimServiceImpl implements ClaimService {
 	@Override
 	public List<Claim> findAll() {
 		List<Claim> list = new ArrayList<>();
+		List<Claim> resultList = new ArrayList<>();
 		claimDao.findAll().iterator().forEachRemaining(list::add);
-		return list;
+		for (Claim claim : list) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			claim.setBillDateString(sdf.format(claim.getBillDate()));
+			resultList.add(claim);
+		}
+		return resultList;
 	}
 
 	@Override
