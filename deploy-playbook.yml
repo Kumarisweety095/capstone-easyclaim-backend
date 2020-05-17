@@ -1,8 +1,16 @@
 ---
 - name: Create pods using deployment 
   hosts: master
-  become: true
-  tasks: 
+  tasks:
+  - name: Show current directory
+    command: pwd
+
+  - name: show current user
+    command: id
+
+  - name: create a deployment
+    copy: src="./k8s-deployment.yml" dest="k8s-deployment.yml"
+    
   - name: create a deployment
     command: kubectl apply -f k8s-deployment.yml
  
