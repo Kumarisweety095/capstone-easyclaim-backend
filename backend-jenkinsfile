@@ -25,7 +25,7 @@ pipeline {
                 rtMavenRun (
                     tool: 'maven',
                     pom: 'pom.xml',
-                    goals: 'clean verify sonar:sonar',
+                    goals: 'clean package',
                     deployerId: "MAVEN_DEPLOYER",
                     resolverId: "MAVEN_RESOLVER"
                 )
