@@ -1,2 +1,2 @@
 # capstone-easyclaim-backend
-capstone-easyclaim-backend
+Backend code for easycliam application
